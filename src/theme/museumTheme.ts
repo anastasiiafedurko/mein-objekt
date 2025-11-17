@@ -1,17 +1,8 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme as createMUITheme } from "@mui/material/styles";
+import type { PlatformConfig } from "../types/PlatformConfig";
 
-export interface MuseumConfig {
-  name: string;
-  logoUrl: string;
-  theme?: {
-    primary?: string;
-    secondary?: string;
-    background?: string;
-  };
-}
-
-export function createMuseumTheme(config: MuseumConfig) {
-  return createTheme({
+export function createTheme(config: PlatformConfig) {
+  return createMUITheme({
     palette: {
       primary: { main: config.theme?.primary || "#1E88E5" },
       secondary: { main: config.theme?.secondary || "#8E24AA" },
