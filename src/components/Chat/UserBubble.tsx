@@ -1,10 +1,6 @@
 import { Box } from "@mui/material";
 
-export default function UserBubble({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export const UserBubble = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box
       sx={{
@@ -20,4 +16,6 @@ export default function UserBubble({
       {children}
     </Box>
   );
-}
+};
+
+export default UserBubble;

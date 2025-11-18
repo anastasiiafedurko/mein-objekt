@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import PrimaryButton from "../components/Buttons/PrimaryButton";
+import PrimaryButton from "../components/Buttons/PrimaryButton/PrimaryButton";
 import MuseumAppBar from "../components/AppBar/MuseumAppBar";
 
 interface Props {

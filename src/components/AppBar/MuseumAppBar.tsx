@@ -5,7 +5,7 @@ interface Props {
   logoUrl?: string;
 }
 
-export default function MuseumAppBar({ museumName, logoUrl }: Props) {
+export const MuseumAppBar = ({ museumName, logoUrl }: Props) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -20,4 +20,6 @@ export default function MuseumAppBar({ museumName, logoUrl }: Props) {
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+export default MuseumAppBar;

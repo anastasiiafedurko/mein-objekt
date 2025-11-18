@@ -1,53 +1,70 @@
-import { Box, Typography } from "@mui/material";
-import MuseumAppBar from "../components/AppBar/MuseumAppBar";
-import ObjectCard from "../components/Cards/ObjectCard";
-import { Fab } from "@mui/material";
-import QrIcon from "@mui/icons-material/QrCodeScanner";
+import { Typography, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getPlatform } from "../store/platform/selectors";
+import { getRecentObjects } from "../store/recentObjects/selectors";
+import type { AppDispatch } from "../store";
+import { useEffect } from "react";
+import {
+  addRecentObject,
+  loadRecentObjects,
+} from "../store/recentObjects/recentObjectsSlice";
+import type { ObjectItem } from "../types/ObjectItem";
+import ScanButton from "../components/Buttons/ScanButton/ScanButton";
+import { mockRecentObjects } from "../dammyData/recentObjects";
+import RecentObjectsList from "../components/Objects/RecentObject/RecentObjectsList";
 
-interface ObjectType {
-  id: string;
-  title: string;
-  imageUrl: string;
-}
+export const Main = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { config, loading } = useSelector(getPlatform);
+  const recentObjects = useSelector(getRecentObjects);
 
-interface Props {
-  museumName: string;
-  logoUrl?: string;
-  recentObjects: ObjectType[];
-  onScanQr: () => void;
-}
+  useEffect(() => {
+    // dispatch(loadRecentObjects());
+    mockRecentObjects.forEach((obj) => dispatch(addRecentObject(obj)));
+  }, [dispatch]);
 
-export default function Main({
-  museumName,
-  logoUrl,
-  recentObjects,
-  onScanQr,
-}: Props) {
+  const handleRecentObject = (obj: ObjectItem) => {
+    navigate(`/object/${obj.id}`);
+  };
+
+  if (loading) {
+    return (
+      <Box textAlign="center" mt={4}>
+        <Typography variant="h6">Loading...</Typography>
+      </Box>
+    );
+  }
+
   return (
-    <Box>
-      <MuseumAppBar museumName={museumName} logoUrl={logoUrl} />
+    <>
       <Box
+        p={3}
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          mt: 2,
+          // minHeight: "100vh",
+          pb: "120px",
         }}
       >
-        {recentObjects.length === 0 && (
-          <Typography>No recently viewed objects</Typography>
+        {config?.logoUrl && (
+          <Box textAlign="center" mb={3}>
+            <img src={config.logoUrl} alt="Museum Logo" height={80} />
+          </Box>
         )}
-        {recentObjects.map((obj) => (
-          <ObjectCard key={obj.id} title={obj.title} imageUrl={obj.imageUrl} />
-        ))}
+
+        <Typography variant="h5" textAlign="center" mb={4}>
+          {config?.name}
+        </Typography>
+
+        <RecentObjectsList
+          objects={recentObjects}
+          onClick={(obj) => handleRecentObject(obj)}
+        />
       </Box>
-      <Fab
-        color="primary"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        onClick={onScanQr}
-      >
-        <QrIcon />
-      </Fab>
-    </Box>
+
+      <ScanButton onClick={() => navigate("/scan")} />
+    </>
   );
-}
+};
+
+export default Main;
