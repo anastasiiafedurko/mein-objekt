@@ -1,7 +1,7 @@
 import type { PlatformConfig } from "../types/PlatformConfig";
 
-export const ludwigConfig: PlatformConfig = {
-  name: "Ludwig Museum",
+export const louvreConfig: PlatformConfig = {
+  name: "Louvre Museum",
   logoUrl: "/images/museum-logo.png",
   theme: {
     primary: "#1E88E5",

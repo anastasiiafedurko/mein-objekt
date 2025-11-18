@@ -1,12 +1,11 @@
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import type { ObjectCardProps } from "./ObjectCard.types";
 
-interface Props {
-  title: string;
-  imageUrl: string;
-  description?: string;
-}
-
-export default function ObjectCard({ title, imageUrl, description }: Props) {
+export const ObjectCard: React.FC<ObjectCardProps> = ({
+  title,
+  imageUrl,
+  description,
+}) => {
   return (
     <Card sx={{ maxWidth: 345, m: 1 }}>
       <CardMedia component="img" height="140" image={imageUrl} alt={title} />
@@ -16,4 +15,6 @@ export default function ObjectCard({ title, imageUrl, description }: Props) {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default ObjectCard;
