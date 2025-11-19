@@ -5,10 +5,7 @@ import { getPlatform } from "../store/platform/selectors";
 import { getRecentObjects } from "../store/recentObjects/selectors";
 import type { AppDispatch } from "../store";
 import { useEffect } from "react";
-import {
-  addRecentObject,
-  loadRecentObjects,
-} from "../store/recentObjects/recentObjectsSlice";
+import { addRecentObject } from "../store/recentObjects/recentObjectsSlice";
 import type { ObjectItem } from "../types/ObjectItem";
 import ScanButton from "../components/Buttons/ScanButton/ScanButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
@@ -46,16 +43,6 @@ export const Main = () => {
           pb: "120px",
         }}
       >
-        {config?.logoUrl && (
-          <Box textAlign="center" mb={3}>
-            <img src={config.logoUrl} alt="Museum Logo" height={80} />
-          </Box>
-        )}
-
-        <Typography variant="h5" textAlign="center" mb={4}>
-          {config?.name}
-        </Typography>
-
         <RecentObjectsList
           objects={recentObjects}
           onClick={(obj) => handleRecentObject(obj)}

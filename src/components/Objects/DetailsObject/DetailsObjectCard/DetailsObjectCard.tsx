@@ -1,5 +1,5 @@
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
-import type { ObjectCardProps } from "./ObjectCard.types";
+import type { ObjectCardProps } from "./DetailsObjectCard.types";
 
 export const ObjectCard: React.FC<ObjectCardProps> = ({
   title,

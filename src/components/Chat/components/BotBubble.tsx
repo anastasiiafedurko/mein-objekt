@@ -4,7 +4,7 @@ export const BotBubble = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box
       sx={{
-        backgroundColor: (theme) => theme.palette.background.paper,
+        backgroundColor: (theme) => theme.palette.background.default,
         color: (theme) => theme.palette.text.primary,
         borderRadius: "16px",
         p: 1.5,
