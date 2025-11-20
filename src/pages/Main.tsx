@@ -12,6 +12,8 @@ import { mockRecentObjects } from "../dammyData/recentObjects";
 import RecentObjectsList from "../components/Objects/RecentObject/RecentObjectsList";
 import QrScanner from "../components/QrScanner/QrScanner";
 import { Loading } from "../components/ui/Loading";
+import { QrReaderTest } from "../components/QrScanner/QrReaderTest";
+import { QrReader } from "react-qr-reader";
 
 export const Main = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,14 +38,17 @@ export const Main = () => {
 
   const handleCloseScanner = () => {
     setScannerOpen(false);
+    // navigate(`/objects/4`);
   };
 
   const handleResultScanner = (text: string) => {
     console.log("QR:", text);
 
-    const obj = recentObjects.find((o) => o.id === text);
+    navigate(`/objects/4`);
 
-    if (obj) navigate(`/object/${obj.id}`);
+    // const obj = recentObjects.find((o) => o.id === text);
+
+    // if (obj) navigate(`/object/${obj.id}`);
 
     setScannerOpen(false);
   };
@@ -66,13 +71,14 @@ export const Main = () => {
           onClick={(obj) => handleRecentObject(obj)}
         />
       </Box>
-
       <ScanButton onClick={handleOpenScanner} />
       <QrScanner
         open={scannerOpen}
         onClose={handleCloseScanner}
-        onResult={handleResultScanner}
+        // onResult={handleResultScanner}
       />
+
+      {/* {scannerOpen && <QrReaderTest onClose={handleCloseScanner} />} */}
     </>
   );
 };

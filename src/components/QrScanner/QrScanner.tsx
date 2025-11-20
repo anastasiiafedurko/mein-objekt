@@ -1,40 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { Box, IconButton, Typography, Button } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { Box, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
-import type { QrScannerProps } from "./QrScanner.types";
 
-const QR_SCANNER_ID = "qr-scanner-view";
+interface QrScannerProps {
+  open: boolean;
+  onClose: () => void;
+}
 
-const QrScanner: React.FC<QrScannerProps> = ({ open, onClose, onResult }) => {
+const QR_SCANNER_ID = "qr-scanner-container";
+
+const QrScanner: React.FC<QrScannerProps> = ({ open, onClose }) => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
-  const handleCloseScannerSafely = async () => {
-    if (scannerRef.current) {
-      try {
-        const state = scannerRef.current.getState();
-        if (state === Html5QrcodeScannerState.SCANNING) {
-          await scannerRef.current.stop();
-        }
-        await scannerRef.current.clear();
-      } catch (err) {
-        console.warn("Error stopping scanner:", err);
-      }
-    }
-    onClose();
-  };
-
-  const handleCheckCameraSettings = () => {
-    alert(
-      "Please check your browser camera settings:\n\n" +
-        "- Chrome/Edge: Settings → Privacy and security → Site settings → Camera\n" +
-        "- Firefox: Settings → Privacy & Security → Permissions → Camera\n" +
-        "- Safari (macOS/iOS): Preferences/Settings → Websites → Camera\n\n" +
-        "Remove any previous blocks for this site and reload the page."
-    );
-  };
 
   useEffect(() => {
     if (!open) return;
@@ -47,36 +25,52 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose, onResult }) => {
 
     const html5QrCode = scannerRef.current;
 
-    const facingMode = isMobile
-      ? { facingMode: { exact: "environment" } }
-      : { facingMode: "user" };
+    // Робоча область (обов'язково!)
+    const qrBox = (viewW: number, viewH: number) => {
+      const minEdge = Math.min(viewW, viewH);
+      const size = Math.floor(minEdge * 0.5); // 50% ширини — ідеально для телефону
+      return { width: size, height: size };
+    };
+
+    const stopScanner = async () => {
+      try {
+        const state = html5QrCode.getState();
+        if (state === Html5QrcodeScannerState.SCANNING) {
+          await html5QrCode.stop();
+        }
+        await html5QrCode.clear();
+      } catch {}
+      onClose();
+    };
+
+    const onSuccess = (decodedText: string) => {
+      alert("QR: " + decodedText);
+      stopScanner();
+    };
+
+    const onError = () => {};
 
     const startScanner = async () => {
       try {
         await html5QrCode.start(
-          facingMode,
-          {
-            fps: 10,
-            qrbox: (viewportWidth, viewportHeight) => {
-              const minEdge = Math.min(viewportWidth, viewportHeight);
-              const size = Math.floor(minEdge * 0.6);
-              return { width: size, height: size };
-            },
-          },
-          (decodedText) => {
-            onResult(decodedText);
-            handleCloseScannerSafely();
-          },
-          (err) => {}
+          { facingMode: "environment" },
+          { fps: 20, qrbox: qrBox },
+          onSuccess,
+          onError
         );
-      } catch (err: any) {
-        console.error("QR Scanner start error", err);
-        if (err.name === "NotAllowedError") {
-          setError(
-            "Camera access is blocked or denied. Please check your browser settings."
+      } catch (err) {
+        console.warn("Back camera failed, switching to front...", err);
+
+        try {
+          await html5QrCode.start(
+            { facingMode: "user" },
+            { fps: 20, qrbox: qrBox },
+            onSuccess,
+            onError
           );
-        } else {
-          setError("Unable to start camera. Please try again.");
+        } catch (err2) {
+          console.error("Camera unable to start:", err2);
+          setError("Unable to start camera. Check permissions.");
         }
       }
     };
@@ -84,9 +78,9 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose, onResult }) => {
     startScanner();
 
     return () => {
-      handleCloseScannerSafely();
+      stopScanner();
     };
-  }, [open, onClose, onResult, isMobile]);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -99,20 +93,15 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose, onResult }) => {
         height: "100vh",
         backgroundColor: "black",
         zIndex: 2000,
-        overflow: "hidden",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        flexDirection: "column",
-        color: "#fff",
-        textAlign: "center",
-        p: 3,
       }}
     >
       <IconButton
-        onClick={handleCloseScannerSafely}
+        onClick={onClose}
         sx={{
-          position: "absolute",
+          position: "fixed",
           top: 16,
           right: 16,
           color: "#fff",
@@ -123,50 +112,35 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose, onResult }) => {
       </IconButton>
 
       {error ? (
-        <Box>
-          <Typography variant="h6" mb={2}>
-            {error}
-          </Typography>
-
-          <Box mb={2} sx={{ textAlign: "left" }}>
-            <Typography>Try the following:</Typography>
-            <ul>
-              <li>Allow camera access in your browser settings.</li>
-              <li>
-                On Safari, go to Settings → Safari → Camera and allow access.
-              </li>
-              <li>Reload the page and try again.</li>
-              <li>Use the QR code manually if possible.</li>
-            </ul>
-          </Box>
-
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleCheckCameraSettings}
-            sx={{ mr: 2 }}
-          >
-            Check Camera Settings
-          </Button>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCloseScannerSafely}
-          >
-            Close
-          </Button>
-        </Box>
+        <Typography color="error" variant="h6">
+          {error}
+        </Typography>
       ) : (
         <Box
           id={QR_SCANNER_ID}
           sx={{
             width: "100%",
             height: "100%",
+            position: "relative",
             "& video": {
               objectFit: "cover",
               width: "100% !important",
               height: "100% !important",
+            },
+            // ВІЗУАЛЬНА рамка того, що реально сканується
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "50vw", // відповідає qrbox 50%
+              height: "50vw",
+              maxWidth: "50vh",
+              maxHeight: "50vh",
+              border: "4px solid rgba(255, 255, 255, 0.8)",
+              borderRadius: "12px",
+              pointerEvents: "none",
             },
           }}
         />
