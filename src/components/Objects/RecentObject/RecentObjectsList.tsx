@@ -12,13 +12,19 @@ export const RecentObjectsList: React.FC<RecentObjectsListProps> = ({
       <Typography variant="h6" textAlign="center" mb={4}>
         Recently Viewed Museum Objects
       </Typography>
-      <Grid container spacing={2}>
-        {objects.map((obj) => (
-          <Grid key={obj.id}>
-            <RecentObjectCard obj={obj} onClick={onClick} />
-          </Grid>
-        ))}
-      </Grid>
+      {objects.length ? (
+        <Grid container spacing={2}>
+          {objects.map((obj) => (
+            <Grid key={obj.id}>
+              <RecentObjectCard obj={obj} onClick={onClick} />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography variant="subtitle1" textAlign="center" mb={4}>
+          Your Recently Viewed List is empty. Please Scan your first object.
+        </Typography>
+      )}
     </>
   );
 };

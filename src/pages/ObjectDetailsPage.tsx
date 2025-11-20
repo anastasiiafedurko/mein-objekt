@@ -30,6 +30,7 @@ export const ObjectDetailsPage = () => {
 
   const toggleDrawer = (value: boolean) => () => {
     setOpenChat(value);
+    console.log("toggleDrawer");
   };
 
   useEffect(() => {
