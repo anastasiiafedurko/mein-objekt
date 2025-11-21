@@ -1,6 +1,6 @@
 import type { ObjectItem } from "../types/ObjectItem";
 
-export const mockRecentObjects: ObjectItem[] = [
+export const allObjects: ObjectItem[] = [
   {
     id: "1",
     name: "Mona Lisa",
@@ -62,7 +62,6 @@ export const mockRecentObjects: ObjectItem[] = [
       { id: "q3", question: "What is the medium?", answer: "Oil on canvas" },
     ],
   },
-  // Нові об'єкти
   {
     id: "5",
     name: "The Persistence of Memory",

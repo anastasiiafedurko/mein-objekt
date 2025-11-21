@@ -16,6 +16,8 @@ import { Loading } from "../components/ui/Loading";
 import Chat from "../components/Chat/Chat";
 import ChatButton from "../components/Buttons/ChatButton/ChatButton";
 import { BackButton } from "../components/Buttons/BackButton/BackButton";
+import { mockRecentObjects } from "../dammyData/recentObjects";
+import { setSelectedObject } from "../store/selectedObject/selectedObjectSlice";
 
 export const ObjectDetailsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,7 +36,11 @@ export const ObjectDetailsPage = () => {
   };
 
   useEffect(() => {
-    if (objectId) dispatch(fetchObject(objectId));
+    // if (objectId) dispatch(fetchObject(objectId));
+    const foundObject = mockRecentObjects.find((obj) => obj.id === objectId);
+    if (foundObject) {
+      dispatch(setSelectedObject(foundObject));
+    }
   }, [dispatch, objectId]);
 
   if (loading || !selectedObject) return <Loading />;
