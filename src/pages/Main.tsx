@@ -10,11 +10,8 @@ import type { ObjectItem } from "../types/ObjectItem";
 import ScanButton from "../components/Buttons/ScanButton/ScanButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
 import RecentObjectsList from "../components/Objects/RecentObject/RecentObjectsList";
-import QrScanner from "../components/QrScanner/QrScanner";
 import { Loading } from "../components/ui/Loading";
-import { QrReaderTest } from "../components/QrScanner/QrReaderTest";
-import { QrReader } from "react-qr-reader";
-import { AdvancedExample } from "../components/QrScanner/QrSacanner2";
+import { QrScanner } from "../components/QrScanner/QrScanner";
 
 export const Main = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,7 +31,8 @@ export const Main = () => {
   };
 
   const handleOpenScanner = () => {
-    setScannerOpen(true);
+    navigate("/scanner");
+    // setScannerOpen(true);
   };
 
   const handleCloseScanner = () => {
@@ -73,29 +71,14 @@ export const Main = () => {
         />
       </Box>
       <ScanButton onClick={handleOpenScanner} />
-      {/* <QrScanner
-        open={scannerOpen}
-        onClose={handleCloseScanner}
-        // onResult={handleResultScanner}
-      /> */}
 
-      {scannerOpen && (
-        <div
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100vh",
+      {/* {scannerOpen && (
+        <QrScanner
+          onCodeScanned={() => {
+            alert("SCANNED");
           }}
-        >
-          <AdvancedExample
-            onCodeScanned={() => {
-              alert("SCANNED");
-            }}
-          />
-        </div>
-      )}
+        />
+      )} */}
 
       {/* {scannerOpen && <QrReaderTest onClose={handleCloseScanner} />} */}
     </>

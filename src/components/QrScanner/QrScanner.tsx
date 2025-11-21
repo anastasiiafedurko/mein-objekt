@@ -1,107 +1,59 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, IconButton, Typography } from "@mui/material";
+import { useFetchCameras } from "../../hooks/useFetchCameras";
+import { QRCODE_REGION, SCANNER_CONFIG } from "../../configs/scannerConfig";
+import {
+  HtmlQrcodeAdvancedPlugin,
+  type IHtmlQrcodePluginForwardedRef,
+} from "../../plugins/HtmlQrcodeAdvancedPlugin";
+import { Alert, Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
+import type { QrScannerProps } from "./QrScanner.types";
+import { Loading } from "../ui/Loading";
 
-interface QrScannerProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-const QR_SCANNER_ID = "qr-scanner-container";
-
-const QrScanner: React.FC<QrScannerProps> = ({ open, onClose }) => {
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export const QrScanner: React.FC<QrScannerProps> = ({ onResult, onClose }) => {
+  const {
+    fetchCameras,
+    state: { loading, error, cameraDevices },
+  } = useFetchCameras();
+  console.log("cameraDevices ", cameraDevices);
 
   useEffect(() => {
-    if (!open) return;
+    fetchCameras();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const ref = useRef<IHtmlQrcodePluginForwardedRef>(null);
+  const [selectedCameraId, setSelectedCameraId] = useState<string | undefined>(
+    undefined
+  );
 
-    setError(null);
+  if (loading) {
+    return <Loading />;
+  }
 
-    if (!scannerRef.current) {
-      scannerRef.current = new Html5Qrcode(QR_SCANNER_ID);
-    }
+  if (error) {
+    return (
+      <Alert variant="filled" severity="error">
+        Failed to detect cameras.
+      </Alert>
+    );
+  }
 
-    const html5QrCode = scannerRef.current;
-
-    // Робоча область (обов'язково!)
-    const qrBox = (viewW: number, viewH: number) => {
-      const minEdge = Math.min(viewW, viewH);
-      const size = Math.floor(minEdge * 0.5); // 50% ширини — ідеально для телефону
-      return { width: size, height: size };
-    };
-
-    const stopScanner = async () => {
-      try {
-        const state = html5QrCode.getState();
-        if (state === Html5QrcodeScannerState.SCANNING) {
-          await html5QrCode.stop();
-        }
-        await html5QrCode.clear();
-      } catch {}
-      onClose();
-    };
-
-    const onSuccess = (decodedText: string) => {
-      alert("QR: " + decodedText);
-      onClose();
-      // setTimeout(() => alert("QR: " + decodedText), 100);
-      stopScanner();
-    };
-
-    const onError = () => {};
-
-    const startScanner = async () => {
-      try {
-        await html5QrCode.start(
-          {
-            facingMode: "environment",
-          },
-
-          { fps: 5, qrbox: qrBox },
-
-          onSuccess,
-          onError
-        );
-      } catch (err) {
-        console.warn("Back camera failed, switching to front...", err);
-
-        try {
-          await html5QrCode.start(
-            { facingMode: "user" },
-            { fps: 20, qrbox: qrBox },
-            onSuccess,
-            onError
-          );
-        } catch (err2) {
-          console.error("Camera unable to start:", err2);
-          setError("Unable to start camera. Check permissions.");
-        }
-      }
-    };
-
-    startScanner();
-
-    return () => {
-      stopScanner();
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
+  if (cameraDevices.length === 0) {
+    return (
+      <Alert variant="filled" severity="error">
+        No available cameras.
+      </Alert>
+    );
+  }
 
   return (
     <Box
       sx={{
         position: "fixed",
-        inset: 0,
-        width: "100vw",
+        left: 0,
+        top: 0,
+        width: "100%",
         height: "100vh",
-        backgroundColor: "black",
-        zIndex: 2000,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
       <IconButton
@@ -117,42 +69,13 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose }) => {
         <CloseIcon sx={{ fontSize: 32 }} />
       </IconButton>
 
-      {error ? (
-        <Typography color="error" variant="h6">
-          {error}
-        </Typography>
-      ) : (
-        <Box
-          id={QR_SCANNER_ID}
-          sx={{
-            width: "100%",
-            height: "100%",
-            position: "relative",
-            "& video": {
-              objectFit: "cover",
-              width: "100% !important",
-              height: "100% !important",
-            },
-            // ВІЗУАЛЬНА рамка того, що реально сканується
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "50vw", // відповідає qrbox 50%
-              height: "50vw",
-              maxWidth: "50vh",
-              maxHeight: "50vh",
-              border: "4px solid rgba(255, 255, 255, 0.8)",
-              borderRadius: "12px",
-              pointerEvents: "none",
-            },
-          }}
-        />
-      )}
+      <HtmlQrcodeAdvancedPlugin
+        ref={ref}
+        config={SCANNER_CONFIG}
+        onCodeScanned={onResult}
+        qrcodeRegionId={QRCODE_REGION}
+        cameraId={selectedCameraId || cameraDevices[0].id}
+      />
     </Box>
   );
 };
-
-export default QrScanner;

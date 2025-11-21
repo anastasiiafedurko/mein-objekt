@@ -10,14 +10,12 @@ import {
 import type { AppLayoutProps } from "./AppLayout.types";
 import { ThemeToggleButtonGroup } from "../Buttons/ThemeToggleButton/ThemeToggleButtonGroup";
 
-import ScanButton from "../Buttons/ScanButton/ScanButton";
-import { useNavigate } from "react-router";
-import SettingsIcon from "@mui/icons-material/Settings";
+import { Outlet, useNavigate } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import Header from "../Header/Header";
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+const AppLayout = () => {
   const navigate = useNavigate();
   const [openSettings, setOpenSettings] = useState(false);
 
@@ -27,8 +25,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   return (
     <Box sx={{ position: "relative", minHeight: "100vh", pt: "64px" }}>
-      {children}
-
+      <Outlet />
       <Header
         museumName="Louvre Museum"
         logoUrl="/images/museum-logo.png"

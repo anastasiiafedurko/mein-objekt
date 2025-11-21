@@ -1,5 +1,4 @@
 export interface QrScannerProps {
-  open: boolean;
-  onResult: (text: string) => void;
+  onResult: (code: string) => void;
   onClose: () => void;
 }
