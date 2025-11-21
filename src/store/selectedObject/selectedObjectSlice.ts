@@ -14,7 +14,7 @@ const selectedObjectSlice = createSlice({
   name: "selectedObject",
   initialState,
   reducers: {
-    setSelectedObject(state, action: PayloadAction<ObjectItem>) {
+    setSelectedObject(state, action: PayloadAction<ObjectItem | null>) {
       state.selectedObject = action.payload;
     },
     clearSelectedObject(state) {

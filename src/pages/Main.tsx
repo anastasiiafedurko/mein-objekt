@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, SwipeableDrawer, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlatform } from "../store/platform/selectors";
@@ -45,11 +45,11 @@ export const Main = () => {
 
     navigate(`/objects/4`);
 
-    // const obj = recentObjects.find((o) => o.id === text);
-
-    // if (obj) navigate(`/object/${obj.id}`);
-
     setScannerOpen(false);
+  };
+
+  const toggleDrawer = (value: boolean) => () => {
+    setScannerOpen(value);
   };
 
   if (loading) {
@@ -70,17 +70,24 @@ export const Main = () => {
           onClick={(obj) => handleRecentObject(obj)}
         />
       </Box>
-      <ScanButton onClick={handleOpenScanner} />
+      <ScanButton
+        onClick={handleOpenScanner}
+        // onClick={toggleDrawer(true)}
+      />
 
       {/* {scannerOpen && (
-        <QrScanner
-          onCodeScanned={() => {
-            alert("SCANNED");
-          }}
-        />
+        <SwipeableDrawer
+          anchor="bottom"
+          open={scannerOpen}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+        >
+          <QrScanner
+            onResult={handleCloseScanner}
+            onClose={handleCloseScanner}
+          />
+        </SwipeableDrawer>
       )} */}
-
-      {/* {scannerOpen && <QrReaderTest onClose={handleCloseScanner} />} */}
     </>
   );
 };
