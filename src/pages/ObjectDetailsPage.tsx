@@ -11,11 +11,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../store";
-import { fetchObject } from "../store/selectedObject/actions";
 import { Loading } from "../components/ui/Loading";
 import Chat from "../components/Chat/Chat";
 import ChatButton from "../components/Buttons/ChatButton/ChatButton";
 import { BackButton } from "../components/Buttons/BackButton/BackButton";
+import { mockRecentObjects } from "../dammyData/recentObjects";
+import { setSelectedObject } from "../store/selectedObject/selectedObjectSlice";
 
 export const ObjectDetailsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,14 +31,26 @@ export const ObjectDetailsPage = () => {
 
   const toggleDrawer = (value: boolean) => () => {
     setOpenChat(value);
-    console.log("toggleDrawer");
   };
 
   useEffect(() => {
-    if (objectId) dispatch(fetchObject(objectId));
+    // if (objectId) dispatch(fetchObject(objectId));
+    if (!objectId) return;
+
+    const foundObject = mockRecentObjects.find((obj) => obj.id === objectId);
+
+    if (foundObject) {
+      dispatch(setSelectedObject(foundObject));
+    } else {
+      dispatch(setSelectedObject(null));
+    }
   }, [dispatch, objectId]);
 
-  if (loading || !selectedObject) return <Loading />;
+  if (loading) return <Loading />;
+
+  if (!selectedObject) {
+    return <Typography variant="h4">Object not found</Typography>;
+  }
 
   return (
     <Box p={3}>

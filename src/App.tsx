@@ -13,6 +13,7 @@ import { getPlatform } from "./store/platform/selectors";
 import { fetchPlatform } from "./store/platform/actions";
 import ObjectDetailsPage from "./pages/ObjectDetailsPage";
 import AppLayout from "./components/AppLayout.tsx/AppLayout";
+import QrScannerPage from "./pages/QrScannerPage";
 
 function App() {
   const navigate = useNavigate();
@@ -46,8 +47,10 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppLayout>
-        <Routes>
+      <Routes>
+        <Route path="/scanner" element={<QrScannerPage />} />
+
+        <Route element={<AppLayout />}>
           <Route
             path="/welcome"
             element={
@@ -61,8 +64,8 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/objects/:objectId" element={<ObjectDetailsPage />} />
           <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </AppLayout>
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 }

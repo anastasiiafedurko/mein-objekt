@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, SwipeableDrawer, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlatform } from "../store/platform/selectors";
@@ -10,8 +10,8 @@ import type { ObjectItem } from "../types/ObjectItem";
 import ScanButton from "../components/Buttons/ScanButton/ScanButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
 import RecentObjectsList from "../components/Objects/RecentObject/RecentObjectsList";
-import QrScanner from "../components/QrScanner/QrScanner";
 import { Loading } from "../components/ui/Loading";
+import { QrScanner } from "../components/QrScanner/QrScanner";
 
 export const Main = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,21 +31,25 @@ export const Main = () => {
   };
 
   const handleOpenScanner = () => {
-    setScannerOpen(true);
+    navigate("/scanner");
+    // setScannerOpen(true);
   };
 
   const handleCloseScanner = () => {
     setScannerOpen(false);
+    // navigate(`/objects/4`);
   };
 
   const handleResultScanner = (text: string) => {
     console.log("QR:", text);
 
-    const obj = recentObjects.find((o) => o.id === text);
-
-    if (obj) navigate(`/object/${obj.id}`);
+    navigate(`/objects/4`);
 
     setScannerOpen(false);
+  };
+
+  const toggleDrawer = (value: boolean) => () => {
+    setScannerOpen(value);
   };
 
   if (loading) {
@@ -66,13 +70,24 @@ export const Main = () => {
           onClick={(obj) => handleRecentObject(obj)}
         />
       </Box>
-
-      <ScanButton onClick={handleOpenScanner} />
-      <QrScanner
-        open={scannerOpen}
-        onClose={handleCloseScanner}
-        onResult={handleResultScanner}
+      <ScanButton
+        onClick={handleOpenScanner}
+        // onClick={toggleDrawer(true)}
       />
+
+      {/* {scannerOpen && (
+        <SwipeableDrawer
+          anchor="bottom"
+          open={scannerOpen}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+        >
+          <QrScanner
+            onResult={handleCloseScanner}
+            onClose={handleCloseScanner}
+          />
+        </SwipeableDrawer>
+      )} */}
     </>
   );
 };

@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { SelectedObjectState } from "./types";
 import { fetchObject } from "./actions";
 import { mockRecentObjects } from "../../dammyData/recentObjects";
+import type { ObjectItem } from "../../types/ObjectItem";
 
 const initialState: SelectedObjectState = {
   selectedObject: null,
@@ -13,8 +14,11 @@ const selectedObjectSlice = createSlice({
   name: "selectedObject",
   initialState,
   reducers: {
-    setSelectedObject(state, action) {
+    setSelectedObject(state, action: PayloadAction<ObjectItem | null>) {
       state.selectedObject = action.payload;
+    },
+    clearSelectedObject(state) {
+      state.selectedObject = null;
     },
   },
   extraReducers: (builder) => {
