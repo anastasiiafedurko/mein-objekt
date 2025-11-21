@@ -10,5 +10,6 @@ export default defineConfig({
       cert: "./node_modules/vite-plugin-mkcert/certs/cert.pem",
       key: "./node_modules/vite-plugin-mkcert/certs/key.pem",
     },
+    hmr: false,
   },
 });

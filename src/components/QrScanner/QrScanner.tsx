@@ -72,10 +72,32 @@ export const QrScanner: React.FC<QrScannerProps> = ({ onResult, onClose }) => {
       <HtmlQrcodeAdvancedPlugin
         ref={ref}
         config={SCANNER_CONFIG}
-        onCodeScanned={onResult}
+        onCodeScanned={(code) => onResult(code)}
         qrcodeRegionId={QRCODE_REGION}
         cameraId={selectedCameraId || cameraDevices[0].id}
+        className="full-screen-video"
       />
+      <style>
+        {`
+        // .full-screen-video {
+        //   width: 100vw;
+        //   height: 100vh;
+        //   display: flex;
+        //   justify-content: center;
+        //   align-items: center;
+        //   background: black;
+        // }
+        // .full-screen-video video {
+        //   width: 100% !important;
+        //   height: 100% !important;
+        //   object-fit: cover !important;
+        // }
+        // .full-screen-video > div {
+        //   width: 100% !important;
+        //   height: 100% !important;
+        // }
+        `}
+      </style>
     </Box>
   );
 };

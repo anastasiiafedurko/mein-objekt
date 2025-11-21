@@ -8,14 +8,12 @@ export const QrScannerPage = () => {
     navigate(-1);
   };
 
-  return (
-    <QrScanner
-      onResult={() => {
-        alert("SCANNED");
-      }}
-      onClose={handleCloseScanner}
-    />
-  );
+  const handleScanned = (text: string) => {
+    alert(text);
+    // navigate("/objects/4");
+  };
+
+  return <QrScanner onResult={handleScanned} onClose={handleCloseScanner} />;
 };
 
 export default QrScannerPage;
