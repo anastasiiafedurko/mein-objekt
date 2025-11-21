@@ -14,6 +14,7 @@ import QrScanner from "../components/QrScanner/QrScanner";
 import { Loading } from "../components/ui/Loading";
 import { QrReaderTest } from "../components/QrScanner/QrReaderTest";
 import { QrReader } from "react-qr-reader";
+import { AdvancedExample } from "../components/QrScanner/QrSacanner2";
 
 export const Main = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -72,11 +73,29 @@ export const Main = () => {
         />
       </Box>
       <ScanButton onClick={handleOpenScanner} />
-      <QrScanner
+      {/* <QrScanner
         open={scannerOpen}
         onClose={handleCloseScanner}
         // onResult={handleResultScanner}
-      />
+      /> */}
+
+      {scannerOpen && (
+        <div
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 0,
+            width: "100%",
+            height: "100vh",
+          }}
+        >
+          <AdvancedExample
+            onCodeScanned={() => {
+              alert("SCANNED");
+            }}
+          />
+        </div>
+      )}
 
       {/* {scannerOpen && <QrReaderTest onClose={handleCloseScanner} />} */}
     </>

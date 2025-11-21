@@ -45,6 +45,8 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose }) => {
 
     const onSuccess = (decodedText: string) => {
       alert("QR: " + decodedText);
+      onClose();
+      // setTimeout(() => alert("QR: " + decodedText), 100);
       stopScanner();
     };
 
@@ -53,8 +55,12 @@ const QrScanner: React.FC<QrScannerProps> = ({ open, onClose }) => {
     const startScanner = async () => {
       try {
         await html5QrCode.start(
-          { facingMode: "environment" },
-          { fps: 20, qrbox: qrBox },
+          {
+            facingMode: "environment",
+          },
+
+          { fps: 5, qrbox: qrBox },
+
           onSuccess,
           onError
         );
