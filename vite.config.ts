@@ -14,16 +14,16 @@ const manifest: Partial<ManifestOptions> = {
   background_color: "#2EC6FE",
   icons: [
     {
-      purpose: "maskable",
-      sizes: "512x512",
       src: "icon512_maskable.png",
+      sizes: "512x512",
       type: "image/png",
+      purpose: "maskable",
     },
     {
-      purpose: "any",
-      sizes: "512x512",
       src: "icon512_rounded.png",
+      sizes: "512x512",
       type: "image/png",
+      purpose: "any",
     },
   ],
 };
@@ -32,51 +32,61 @@ export default defineConfig({
   plugins: [
     react(),
     mkcert(),
+
     VitePWA({
       registerType: "autoUpdate",
       manifest,
+      includeAssets: ["images/*"],
+
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+        globPatterns: [
+          "**/*.{js,css,html,svg,ico,png,jpg,jpeg,webp}",
+          "images/*",
+        ],
+
         runtimeCaching: [
           {
-            urlPattern: /^\/images\/.*\.(png|jpg|jpeg|svg|ico)$/,
+            urlPattern: ({ url }) => url.pathname.startsWith("/images/"),
             handler: "CacheFirst",
             options: {
               cacheName: "images-cache",
-              expiration: { maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 }, // 30 днів
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
             },
           },
+
           {
-            urlPattern: /^\/.*\.json$/,
+            urlPattern: ({ request }) => request.mode === "navigate",
             handler: "NetworkFirst",
             options: {
-              cacheName: "json-cache",
-              expiration: { maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 }, // 1 день
+              cacheName: "html-cache",
             },
           },
+
           {
-            urlPattern: /^\/.*\.js$/,
+            urlPattern: ({ request }) => request.destination === "script",
             handler: "NetworkFirst",
-            options: {
-              cacheName: "js-cache",
-            },
+            options: { cacheName: "js-cache" },
           },
+
           {
-            urlPattern: /^\/.*\.css$/,
+            urlPattern: ({ request }) => request.destination === "style",
             handler: "NetworkFirst",
-            options: {
-              cacheName: "css-cache",
-            },
+            options: { cacheName: "css-cache" },
           },
         ],
       },
     }),
   ],
+
   resolve: {
     alias: {
       "@dummyData": path.resolve(__dirname, "src/dummyData"),
     },
   },
+
   server: {
     host: true,
     https: {

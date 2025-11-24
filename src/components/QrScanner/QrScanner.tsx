@@ -15,7 +15,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({ onResult, onClose }) => {
     fetchCameras,
     state: { loading, error, cameraDevices },
   } = useFetchCameras();
-  console.log("cameraDevices ", cameraDevices);
+  // console.log("cameraDevices ", cameraDevices);
 
   useEffect(() => {
     fetchCameras();
