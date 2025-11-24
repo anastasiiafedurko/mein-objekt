@@ -39,7 +39,7 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|svg|gif)$/,
+            urlPattern: /^\/images\/.*\.(png|jpg|jpeg|svg|ico)$/,
             handler: "CacheFirst",
             options: {
               cacheName: "images-cache",
