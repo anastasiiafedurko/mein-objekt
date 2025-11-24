@@ -33,12 +33,17 @@ const platformSlice = createSlice({
         state.platformId = action.payload.platformId;
         state.loading = false;
       })
-      .addCase(fetchPlatform.rejected, (state, action) => {
-        if (state.platformId === action.meta.arg) {
-          state.config = state.config ?? louvreConfig;
-        } else {
-          state.config = null;
-        }
+      .addCase(fetchPlatform.rejected, (state) => {
+        // TODO: for backend
+        // if (state.platformId === action.meta.arg) {
+        //   state.config = state.config ?? louvreConfig;
+        // } else {
+        //   state.config = null;
+        // }
+        // state.loading = false;
+        // state.error = "Using fallback config or offline";
+
+        state.config = state.config ?? louvreConfig;
         state.loading = false;
         state.error = "Using fallback config or offline";
       });
