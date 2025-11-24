@@ -1,55 +1,29 @@
-import { Box, SwipeableDrawer, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlatform } from "../store/platform/selectors";
 import { getRecentObjects } from "../store/recentObjects/selectors";
 import type { AppDispatch } from "../store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { addRecentObject } from "../store/recentObjects/recentObjectsSlice";
-import type { ObjectItem } from "../types/ObjectItem";
 import ScanButton from "../components/Buttons/ScanButton/ScanButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
 import RecentObjectsList from "../components/Objects/RecentObject/RecentObjectsList";
 import { Loading } from "../components/ui/Loading";
-import { QrScanner } from "../components/QrScanner/QrScanner";
 
 export const Main = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { config, loading } = useSelector(getPlatform);
+  const { loading } = useSelector(getPlatform);
   const recentObjects = useSelector(getRecentObjects);
-
-  const [scannerOpen, setScannerOpen] = useState(false);
 
   useEffect(() => {
     // dispatch(loadRecentObjects());
     mockRecentObjects.forEach((obj) => dispatch(addRecentObject(obj)));
   }, [dispatch]);
 
-  const handleRecentObject = (obj: ObjectItem) => {
-    navigate(`/object/${obj.id}`);
-  };
-
   const handleOpenScanner = () => {
     navigate("/scanner");
-    // setScannerOpen(true);
-  };
-
-  const handleCloseScanner = () => {
-    setScannerOpen(false);
-    // navigate(`/objects/4`);
-  };
-
-  const handleResultScanner = (text: string) => {
-    console.log("QR:", text);
-
-    navigate(`/objects/4`);
-
-    setScannerOpen(false);
-  };
-
-  const toggleDrawer = (value: boolean) => () => {
-    setScannerOpen(value);
   };
 
   if (loading) {
@@ -65,29 +39,9 @@ export const Main = () => {
           pb: "120px",
         }}
       >
-        <RecentObjectsList
-          objects={recentObjects}
-          onClick={(obj) => handleRecentObject(obj)}
-        />
+        <RecentObjectsList objects={recentObjects} />
       </Box>
-      <ScanButton
-        onClick={handleOpenScanner}
-        // onClick={toggleDrawer(true)}
-      />
-
-      {/* {scannerOpen && (
-        <SwipeableDrawer
-          anchor="bottom"
-          open={scannerOpen}
-          onClose={toggleDrawer(false)}
-          onOpen={toggleDrawer(true)}
-        >
-          <QrScanner
-            onResult={handleCloseScanner}
-            onClose={handleCloseScanner}
-          />
-        </SwipeableDrawer>
-      )} */}
+      <ScanButton onClick={handleOpenScanner} />
     </>
   );
 };

@@ -1,42 +1,11 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  IconButton,
-  ImageListItem,
-  ImageListItemBar,
-  ListSubheader,
-  Typography,
-} from "@mui/material";
+import { IconButton, ImageListItem, ImageListItemBar } from "@mui/material";
 import type { RecentObjectCardProps } from "./RecentObjectCard.types";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import InfoIcon from "@mui/icons-material/Info";
 
-export const RecentObjectCard: React.FC<RecentObjectCardProps> = ({
-  obj,
-  onClick = () => {},
-}) => {
+export const RecentObjectCard: React.FC<RecentObjectCardProps> = ({ obj }) => {
   const navigate = useNavigate();
   return (
-    // <Link to={`/objects/${obj.id}`}>
-    //   <Card elevation={3}>
-    //     <CardActionArea onClick={() => onClick(obj)}>
-    //       <CardMedia
-    //         component="img"
-    //         height="180"
-    //         image={obj.imageUrl}
-    //         alt={obj.name}
-    //         sx={{ objectFit: "cover" }}
-    //       />
-    //       <CardContent>
-    //         <Typography variant="subtitle1" align="center">
-    //           {obj.name}
-    //         </Typography>
-    //       </CardContent>
-    //     </CardActionArea>
-    //   </Card>
-    // </Link>
     <>
       <ImageListItem>
         <img

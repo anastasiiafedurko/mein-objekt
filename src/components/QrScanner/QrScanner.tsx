@@ -22,9 +22,7 @@ export const QrScanner: React.FC<QrScannerProps> = ({ onResult, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const ref = useRef<IHtmlQrcodePluginForwardedRef>(null);
-  const [selectedCameraId, setSelectedCameraId] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedCameraId] = useState<string | undefined>(undefined);
 
   if (loading) {
     return <Loading />;

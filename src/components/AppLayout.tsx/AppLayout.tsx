@@ -4,19 +4,15 @@ import {
   Typography,
   SwipeableDrawer,
   IconButton,
-  Button,
   Divider,
 } from "@mui/material";
-import type { AppLayoutProps } from "./AppLayout.types";
 import { ThemeToggleButtonGroup } from "../Buttons/ThemeToggleButton/ThemeToggleButtonGroup";
-
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import Header from "../Header/Header";
 
 const AppLayout = () => {
-  const navigate = useNavigate();
   const [openSettings, setOpenSettings] = useState(false);
 
   const toggleDrawer = (value: boolean) => () => {
