@@ -2,8 +2,14 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 import { VitePWA, type ManifestOptions } from "vite-plugin-pwa";
+import path from "path";
 
-const manifest: Partial<ManifestOptions> | false = {
+const manifest: Partial<ManifestOptions> = {
+  name: "Mein Objekt - Museum Client",
+  short_name: "Mein Objekt",
+  lang: "ru",
+  display: "standalone",
+  orientation: "any",
   theme_color: "#8936FF",
   background_color: "#2EC6FE",
   icons: [
@@ -20,11 +26,6 @@ const manifest: Partial<ManifestOptions> | false = {
       type: "image/png",
     },
   ],
-  orientation: "any",
-  display: "standalone",
-  lang: "ru",
-  name: "Mein Objekt – Museum Client",
-  short_name: "Mein Objekt",
 };
 
 export default defineConfig({
@@ -33,12 +34,49 @@ export default defineConfig({
     mkcert(),
     VitePWA({
       registerType: "autoUpdate",
+      manifest,
       workbox: {
-        globPatterns: ["**/*.{html, css, js, ico, png, svg}"],
+        globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/.*\.(png|jpg|jpeg|svg|gif)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images-cache",
+              expiration: { maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 }, // 30 днів
+            },
+          },
+          {
+            urlPattern: /^\/.*\.json$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "json-cache",
+              expiration: { maxEntries: 50, maxAgeSeconds: 24 * 60 * 60 }, // 1 день
+            },
+          },
+          {
+            urlPattern: /^\/.*\.js$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "js-cache",
+            },
+          },
+          {
+            urlPattern: /^\/.*\.css$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "css-cache",
+            },
+          },
+        ],
       },
-      manifest: manifest,
     }),
   ],
+  resolve: {
+    alias: {
+      "@dummyData": path.resolve(__dirname, "src/dummyData"),
+    },
+  },
   server: {
     host: true,
     https: {

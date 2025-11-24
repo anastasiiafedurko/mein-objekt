@@ -14,6 +14,7 @@ import { fetchPlatform } from "./store/platform/actions";
 import ObjectDetailsPage from "./pages/ObjectDetailsPage";
 import AppLayout from "./components/AppLayout.tsx/AppLayout";
 import QrScannerPage from "./pages/QrScannerPage";
+import OfflineWrapper from "./OfflineWrapper/OfflineWrapper";
 
 function App() {
   const navigate = useNavigate();
@@ -46,27 +47,29 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Routes>
-        <Route path="/scanner" element={<QrScannerPage />} />
+    <OfflineWrapper>
+      <ThemeProvider theme={theme}>
+        <Routes>
+          <Route path="/scanner" element={<QrScannerPage />} />
 
-        <Route element={<AppLayout />}>
-          <Route
-            path="/welcome"
-            element={
-              <Welcome
-                museumName={config.name}
-                logoUrl={config.logoUrl}
-                onStart={handleStart}
-              />
-            }
-          />
-          <Route path="/" element={<Main />} />
-          <Route path="/objects/:objectId" element={<ObjectDetailsPage />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Route>
-      </Routes>
-    </ThemeProvider>
+          <Route element={<AppLayout />}>
+            <Route
+              path="/welcome"
+              element={
+                <Welcome
+                  museumName={config.name}
+                  logoUrl={config.logoUrl}
+                  onStart={handleStart}
+                />
+              }
+            />
+            <Route path="/" element={<Main />} />
+            <Route path="/objects/:objectId" element={<ObjectDetailsPage />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Route>
+        </Routes>
+      </ThemeProvider>
+    </OfflineWrapper>
   );
 }
 

@@ -10,6 +10,7 @@ import ScanButton from "../components/Buttons/ScanButton/ScanButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
 import RecentObjectsList from "../components/Objects/RecentObject/RecentObjectsList";
 import { Loading } from "../components/ui/Loading";
+import OfflinePage from "./OfflinePage";
 
 export const Main = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -17,7 +17,6 @@ import ChatButton from "../components/Buttons/ChatButton/ChatButton";
 import { BackButton } from "../components/Buttons/BackButton/BackButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
 import { setSelectedObject } from "../store/selectedObject/selectedObjectSlice";
-import OfflinePage from "./OfflinePage";
 
 export const ObjectDetailsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,10 +51,6 @@ export const ObjectDetailsPage = () => {
   }, [dispatch, objectId]);
 
   if (loading) return <Loading />;
-
-  if (!isOnline && !selectedObject) {
-    return <OfflinePage />;
-  }
 
   if (!selectedObject) {
     return <Typography variant="h4">Object not found</Typography>;
