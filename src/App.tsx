@@ -23,7 +23,7 @@ function App() {
   const mode = useSelector((state: RootState) => state.uiTheme.mode);
 
   useEffect(() => {
-    dispatch(fetchPlatform("ludwig"));
+    dispatch(fetchPlatform("louvre"));
   }, [dispatch]);
 
   if (loading || !config) return <Loading />;

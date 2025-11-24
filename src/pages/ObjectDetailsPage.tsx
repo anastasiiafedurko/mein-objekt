@@ -17,6 +17,7 @@ import ChatButton from "../components/Buttons/ChatButton/ChatButton";
 import { BackButton } from "../components/Buttons/BackButton/BackButton";
 import { mockRecentObjects } from "../dammyData/recentObjects";
 import { setSelectedObject } from "../store/selectedObject/selectedObjectSlice";
+import OfflinePage from "./OfflinePage";
 
 export const ObjectDetailsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +34,8 @@ export const ObjectDetailsPage = () => {
     setOpenChat(value);
   };
 
+  const isOnline = navigator.onLine;
+
   useEffect(() => {
     // if (objectId) dispatch(fetchObject(objectId));
     if (!objectId) return;
@@ -42,11 +45,17 @@ export const ObjectDetailsPage = () => {
     if (foundObject) {
       dispatch(setSelectedObject(foundObject));
     } else {
+      if (!isOnline) return;
+
       dispatch(setSelectedObject(null));
     }
   }, [dispatch, objectId]);
 
   if (loading) return <Loading />;
+
+  if (!isOnline && !selectedObject) {
+    return <OfflinePage />;
+  }
 
   if (!selectedObject) {
     return <Typography variant="h4">Object not found</Typography>;
@@ -96,7 +105,7 @@ export const ObjectDetailsPage = () => {
         }}
       >
         <Box p={2} height="100%" display="flex" flexDirection="column">
-          {objectId && (
+          {selectedObject && (
             <Chat objectId={selectedObject.id} onClose={toggleDrawer(false)} />
           )}
         </Box>
