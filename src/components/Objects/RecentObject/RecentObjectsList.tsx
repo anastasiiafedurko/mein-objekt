@@ -11,7 +11,7 @@ export const RecentObjectsList: React.FC<RecentObjectsListProps> = ({
     <>
       <ImageList cols={isMobile ? 1 : 3} rowHeight={164} variant="quilted">
         {objects.map((obj) => (
-          <RecentObjectCard obj={obj} />
+          <RecentObjectCard obj={obj} key={obj.id} />
         ))}
       </ImageList>
     </>
