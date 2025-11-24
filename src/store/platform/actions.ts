@@ -9,6 +9,7 @@ export const fetchPlatform = createAsyncThunk(
       throw new Error("Failed to load platform config");
     }
 
-    return response.json();
+    const data = await response.json();
+    return { platformId, config: data };
   }
 );

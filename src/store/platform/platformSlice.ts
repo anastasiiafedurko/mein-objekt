@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { louvreConfig } from "../../dammyData/platformConfig";
 import type { PlatformState } from "./types";
 import { fetchPlatform } from "./actions";
 
 const initialState: PlatformState = {
   config: null,
+  platformId: null,
   loading: false,
   error: null,
 };
@@ -13,8 +14,12 @@ const platformSlice = createSlice({
   name: "platform",
   initialState,
   reducers: {
-    setLocalConfig(state, action) {
-      state.config = action.payload;
+    setLocalConfig(
+      state,
+      action: PayloadAction<{ platformId: string; config: any }>
+    ) {
+      state.config = action.payload.config;
+      state.platformId = action.payload.platformId;
     },
   },
   extraReducers: (builder) => {
@@ -24,13 +29,18 @@ const platformSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchPlatform.fulfilled, (state, action) => {
-        state.config = action.payload;
+        state.config = action.payload.config;
+        state.platformId = action.payload.platformId;
         state.loading = false;
       })
-      .addCase(fetchPlatform.rejected, (state) => {
-        state.config = louvreConfig;
+      .addCase(fetchPlatform.rejected, (state, action) => {
+        if (state.platformId === action.meta.arg) {
+          state.config = state.config ?? louvreConfig;
+        } else {
+          state.config = null;
+        }
         state.loading = false;
-        state.error = "Using fallback config";
+        state.error = "Using fallback config or offline";
       });
   },
 });

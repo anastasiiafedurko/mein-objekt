@@ -1,9 +1,8 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import OfflinePage from "../pages/OfflinePage";
-
-interface OfflineWrapperProps {
-  children: ReactNode;
-}
+import type { RootState } from "../store";
+import { useSelector } from "react-redux";
+import type { OfflineWrapperProps } from "./OfflineWrapper.types";
 
 /**
  * OfflineWrapper checks for internet connection
@@ -12,6 +11,10 @@ interface OfflineWrapperProps {
  */
 export const OfflineWrapper: React.FC<OfflineWrapperProps> = ({ children }) => {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
+  const platformConfig = useSelector(
+    (state: RootState) => state.platform.config
+  );
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -26,7 +29,7 @@ export const OfflineWrapper: React.FC<OfflineWrapperProps> = ({ children }) => {
     };
   }, []);
 
-  if (!isOnline) {
+  if (!isOnline && !platformConfig) {
     return <OfflinePage />;
   }
 

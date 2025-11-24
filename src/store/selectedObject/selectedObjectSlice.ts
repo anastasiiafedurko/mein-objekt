@@ -31,13 +31,19 @@ const selectedObjectSlice = createSlice({
         state.selectedObject = action.payload;
         state.loading = false;
       })
-      .addCase(fetchObject.rejected, (state) => {
-        state.selectedObject = mockRecentObjects[0];
+      .addCase(fetchObject.rejected, (state, action) => {
+        state.selectedObject =
+          action.payload && typeof action.payload === "string"
+            ? mockRecentObjects[0]
+            : state.selectedObject;
         state.loading = false;
-        state.error = "Using fallback config";
+        state.error = action.payload
+          ? String(action.payload)
+          : "Failed to fetch object, using fallback";
       });
   },
 });
 
-export const { setSelectedObject } = selectedObjectSlice.actions;
+export const { setSelectedObject, clearSelectedObject } =
+  selectedObjectSlice.actions;
 export default selectedObjectSlice.reducer;
