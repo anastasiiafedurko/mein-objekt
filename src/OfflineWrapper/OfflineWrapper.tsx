@@ -29,6 +29,11 @@ export const OfflineWrapper: React.FC<OfflineWrapperProps> = ({ children }) => {
     };
   }, []);
 
+  if (!isOnline) {
+    console.log("No online");
+    console.log(platformConfig);
+  }
+
   if (!isOnline && !platformConfig) {
     return <OfflinePage />;
   }

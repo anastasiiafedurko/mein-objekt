@@ -63,7 +63,7 @@ export const ObjectDetailsPage = () => {
         <Card>
           <CardMedia
             component="img"
-            image={selectedObject.imageUrl}
+            src={selectedObject.imageUrl}
             alt={selectedObject.name}
             sx={{ objectFit: "contain", maxHeight: 400 }}
           />

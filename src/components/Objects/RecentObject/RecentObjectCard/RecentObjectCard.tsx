@@ -9,7 +9,7 @@ export const RecentObjectCard: React.FC<RecentObjectCardProps> = ({ obj }) => {
     <>
       <ImageListItem>
         <img
-          srcSet={`${obj.imageUrl}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+          srcSet={`${obj.imageUrl}`}
           src={`${obj.imageUrl}`}
           loading="lazy"
           alt={obj.name}
