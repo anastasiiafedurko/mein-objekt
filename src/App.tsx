@@ -13,7 +13,6 @@ import { getPlatform } from "./store/platform/selectors";
 import { fetchPlatform } from "./store/platform/actions";
 import ObjectDetailsPage from "./pages/ObjectDetailsPage";
 import AppLayout from "./components/AppLayout.tsx/AppLayout";
-import QrScannerPage from "./pages/QrScannerPage";
 import OfflineWrapper from "./OfflineWrapper/OfflineWrapper";
 
 function App() {
@@ -50,8 +49,6 @@ function App() {
     <OfflineWrapper>
       <ThemeProvider theme={theme}>
         <Routes>
-          <Route path="/scanner" element={<QrScannerPage />} />
-
           <Route element={<AppLayout />}>
             <Route
               path="/welcome"

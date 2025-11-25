@@ -3,7 +3,7 @@ import { Html5QrcodeSupportedFormats } from "html5-qrcode";
 
 export const SCANNER_CONFIG = {
   fps: 4,
-  qrbox: { width: 300, height: 200 },
+  qrbox: { width: 300, height: 300 },
   formatsToSupport: [
     Html5QrcodeSupportedFormats.CODE_128,
     Html5QrcodeSupportedFormats.QR_CODE,
