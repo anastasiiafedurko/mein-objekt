@@ -5,12 +5,11 @@ import {
   HtmlQrcodeAdvancedPlugin,
   type IHtmlQrcodePluginForwardedRef,
 } from "../../plugins/HtmlQrcodeAdvancedPlugin";
-import { Alert, Box, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Alert, Box } from "@mui/material";
 import type { QrScannerProps } from "./QrScanner.types";
 import { Loading } from "../ui/Loading";
 
-export const QrScanner: React.FC<QrScannerProps> = ({ onResult, onClose }) => {
+export const QrScanner: React.FC<QrScannerProps> = ({ onResult }) => {
   const {
     fetchCameras,
     state: { loading, error, cameraDevices },
@@ -45,55 +44,21 @@ export const QrScanner: React.FC<QrScannerProps> = ({ onResult, onClose }) => {
   }
 
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        left: 0,
-        top: 0,
-        width: "100%",
-        height: "100vh",
-      }}
-    >
-      <IconButton
-        onClick={onClose}
-        sx={{
-          position: "fixed",
-          top: 16,
-          right: 16,
-          color: "#fff",
-          zIndex: 3000,
-        }}
-      >
-        <CloseIcon sx={{ fontSize: 32 }} />
-      </IconButton>
-
+    <Box>
       <HtmlQrcodeAdvancedPlugin
         ref={ref}
         config={SCANNER_CONFIG}
         onCodeScanned={(code) => onResult(code)}
         qrcodeRegionId={QRCODE_REGION}
         cameraId={selectedCameraId || cameraDevices[0].id}
-        className="full-screen-video"
+        className="qr-code-scanner"
       />
       <style>
         {`
-        // .full-screen-video {
-        //   width: 100vw;
-        //   height: 100vh;
-        //   display: flex;
-        //   justify-content: center;
-        //   align-items: center;
-        //   background: black;
-        // }
-        // .full-screen-video video {
-        //   width: 100% !important;
-        //   height: 100% !important;
-        //   object-fit: cover !important;
-        // }
-        // .full-screen-video > div {
-        //   width: 100% !important;
-        //   height: 100% !important;
-        // }
+        .qr-code-scanner {
+          border-radius: 8px;
+          overflow: hidden;
+        }
         `}
       </style>
     </Box>

@@ -1,12 +1,12 @@
 import { IconButton, ImageListItem, ImageListItemBar } from "@mui/material";
 import type { RecentObjectCardProps } from "./RecentObjectCard.types";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import InfoIcon from "@mui/icons-material/Info";
 
 export const RecentObjectCard: React.FC<RecentObjectCardProps> = ({ obj }) => {
   const navigate = useNavigate();
   return (
-    <>
+    <Link to={`/objects/${obj.id}`}>
       <ImageListItem>
         <img
           srcSet={`${obj.imageUrl}`}
@@ -29,7 +29,7 @@ export const RecentObjectCard: React.FC<RecentObjectCardProps> = ({ obj }) => {
           }
         />
       </ImageListItem>
-    </>
+    </Link>
   );
 };
 
