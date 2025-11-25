@@ -36,6 +36,8 @@ export const ObjectDetailsPage = () => {
   const isOnline = navigator.onLine;
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
     // if (objectId) dispatch(fetchObject(objectId));
     if (!objectId) return;
 
